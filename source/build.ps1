@@ -1,0 +1,11 @@
+﻿$ErrorActionPreference = 'Stop'
+$appRoot = Split-Path $PSScriptRoot -Parent
+$framework = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319'
+$wpf = Join-Path $framework 'WPF'
+$references = @('System.dll','System.Core.dll','System.Web.Extensions.dll','System.IO.Compression.dll','System.IO.Compression.FileSystem.dll','System.Xaml.dll','System.Drawing.dll','System.Windows.Forms.dll') | ForEach-Object { '/r:' + (Join-Path $framework $_) }
+$references += @('WindowsBase.dll','PresentationCore.dll','PresentationFramework.dll') | ForEach-Object { '/r:' + (Join-Path $wpf $_) }
+& (Join-Path $framework 'csc.exe') /nologo /target:winexe /platform:x64 /optimize+ ('/resource:' + (Join-Path $appRoot 'SkinGuide.md') + ',ClaudeMeter.SkinGuide.md') ('/win32icon:' + (Join-Path $appRoot 'ClaudeMeter.ico')) ('/win32manifest:' + (Join-Path $PSScriptRoot 'app.manifest')) ('/out:' + (Join-Path $appRoot 'ClaudeMeter.exe')) $references (Join-Path $PSScriptRoot 'ClaudeMeter.cs') (Join-Path $PSScriptRoot 'ClaudeAccount.cs') (Join-Path $PSScriptRoot 'TrayDisplay.cs') (Join-Path $PSScriptRoot 'MenuAppearance.cs') (Join-Path $PSScriptRoot 'GlassFace.cs') (Join-Path $PSScriptRoot 'Lang.cs') (Join-Path $PSScriptRoot 'SpaceFace.cs') (Join-Path $PSScriptRoot 'SkinOptions.cs') (Join-Path $PSScriptRoot 'CustomSkins.cs') (Join-Path $PSScriptRoot 'SkinImage.cs') (Join-Path $PSScriptRoot 'NumericAnimation.cs') (Join-Path $PSScriptRoot 'UpdatePackage.cs') (Join-Path $PSScriptRoot 'AppUpdate.cs') (Join-Path $PSScriptRoot 'WidgetUpdates.cs') (Join-Path $PSScriptRoot 'UpdateTests.cs')
+if ($LASTEXITCODE -ne 0) { throw 'Compilation failed' }
+
+& (Join-Path $framework 'csc.exe') /nologo /target:winexe /platform:x64 /optimize+ ('/win32icon:' + (Join-Path $appRoot 'ClaudeMeter.ico')) ('/out:' + (Join-Path $appRoot 'ClaudeMeter.Updater.exe')) ('/r:' + (Join-Path $framework 'System.dll')) ('/r:' + (Join-Path $framework 'System.Core.dll')) ('/r:' + (Join-Path $framework 'System.Web.Extensions.dll')) ('/r:' + (Join-Path $framework 'System.Windows.Forms.dll')) ('/r:' + (Join-Path $framework 'System.IO.Compression.dll')) ('/r:' + (Join-Path $framework 'System.IO.Compression.FileSystem.dll')) (Join-Path $PSScriptRoot 'UpdateHelper.cs') (Join-Path $PSScriptRoot 'UpdatePackage.cs')
+if ($LASTEXITCODE -ne 0) { throw 'Updater compilation failed' }

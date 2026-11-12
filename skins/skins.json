@@ -1,0 +1,148 @@
+﻿{
+  "skins": [
+    {
+      "id": "lcd-green",
+      "name": "ЖК · зелёное стекло",
+      "kind": "lcd",
+      "background": "green.webp",
+      "ink": "#183139",
+      "number": 1
+    },
+    {
+      "id": "lcd-blue",
+      "name": "ЖК · голубое стекло",
+      "kind": "lcd",
+      "background": "blue.webp",
+      "ink": "#153661",
+      "number": 2
+    },
+    {
+      "id": "tape",
+      "name": "Магнитофон · стрелочные индикаторы",
+      "kind": "analog",
+      "background": "analog.webp",
+      "ink": "#362B1E",
+      "number": 3
+    },
+    {
+      "id": "glass-day",
+      "name": "Стекло · дневной",
+      "kind": "glass",
+      "background": "blue.webp",
+      "ink": "#1C2737",
+      "number": 4
+    },
+    {
+      "id": "glass-night",
+      "name": "Стекло · ночной",
+      "kind": "glass",
+      "background": "blue.webp",
+      "ink": "#EFF5FA",
+      "number": 5
+    },
+    {
+      "id": "beskar",
+      "name": "Бескар",
+      "kind": "space",
+      "background": "beskar.webp",
+      "ink": "#EEE7D7",
+      "number": 6
+    },
+    {
+      "id": "pilot",
+      "name": "Кабина пилота",
+      "kind": "space",
+      "background": "pilot.webp",
+      "ink": "#82F76A",
+      "number": 7
+    },
+    {
+      "id": "imperial",
+      "name": "Имперский терминал",
+      "kind": "space",
+      "background": "imperial.webp",
+      "ink": "#171C23",
+      "number": 8
+    },
+    {
+      "id": "heroes3",
+      "name": "Герои меча и магии III",
+      "kind": "space",
+      "background": "heroes3.webp",
+      "ink": "#F2E3BC",
+      "fill": "#302015",
+      "accent": "#C7A653",
+      "number": 9
+    },
+    {
+      "id": "fallout",
+      "name": "Fallout",
+      "kind": "space",
+      "background": "fallout.webp",
+      "ink": "#7DFF6A",
+      "fill": "#091D0E",
+      "accent": "#3CE962",
+      "number": 10
+    },
+    {
+      "id": "counterstrike",
+      "name": "Counter-Strike",
+      "kind": "space",
+      "background": "counterstrike.webp",
+      "ink": "#EBC56F",
+      "fill": "#202226",
+      "accent": "#D8B963",
+      "number": 11
+    },
+    {
+      "id": "doom2",
+      "name": "DOOM II",
+      "kind": "space",
+      "background": "doom2.webp",
+      "ink": "#FF5350",
+      "fill": "#282828",
+      "accent": "#EEB153",
+      "number": 12
+    },
+    {
+      "id": "diablo",
+      "name": "Diablo",
+      "kind": "space",
+      "background": "diablo.webp",
+      "ink": "#E6CEA9",
+      "fill": "#1D1917",
+      "accent": "#CF3A3E",
+      "number": 13
+    },
+    {
+      "id": "starcraft",
+      "name": "StarCraft",
+      "kind": "space",
+      "background": "starcraft.webp",
+      "ink": "#68F1E1",
+      "fill": "#0B2733",
+      "accent": "#28DABD",
+      "number": 14
+    },
+    {
+      "id": "terminator2",
+      "name": "Терминатор 2",
+      "kind": "space",
+      "background": "terminator2.webp",
+      "ink": "#FF595C",
+      "fill": "#161E29",
+      "accent": "#F22C43",
+      "number": 15
+    },
+    {
+      "id": "vicecity",
+      "name": "GTA: Vice City",
+      "kind": "space",
+      "background": "vicecity.webp",
+      "ink": "#FF8BDB",
+      "fill": "#25102D",
+      "accent": "#45D9FB",
+      "number": 16
+    }
+  ]
+}

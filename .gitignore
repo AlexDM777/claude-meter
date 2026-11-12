@@ -1,0 +1,15 @@
+dist/
+build/
+*.zip
+*.exe
+error.txt
+*-test.txt
+*-profile/
+test-profile/
+account/
+UserSkins/
+Updates/
+settings.json
+auth.json
+*.db
+*.sqlite*

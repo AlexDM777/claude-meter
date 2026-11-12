@@ -1,0 +1,8 @@
+﻿WebP codec: libwebp 1.6.1 (Imazen.WebP.NativeRuntime.win-x64).
+Source/binaries: https://github.com/imazen/libwebp-net
+API: https://developers.google.com/speed/webp/docs/api
+Licenses: WebP-LICENSE.txt, WebP-PATENTS.txt.
+
+Microsoft Visual C++ Runtime vcruntime140.dll, Copyright Microsoft Corporation.
+App-local dependency for WebP, unmodified signed redistributable.
+Redistribution: https://learn.microsoft.com/cpp/windows/redistributing-visual-cpp-files
