@@ -63,6 +63,24 @@ public static class ClaudeAccount {
         }
         return candidates.FirstOrDefault(p=>{try{return Path.IsPathRooted(p)&&File.Exists(p);}catch{return false;}});
     }
+    public static bool NearExpiry(ClaudeLogin login) { return login.ExpiresAtMs>0 && DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()>=login.ExpiresAtMs-10*60*1000; }
+    // Asks Claude Code itself to renew the sign-in (it owns the file; we only read it afterwards).
+    // Step 1: "auth status" (no model request). Step 2, only if still not renewed: one tiny "-p" request on the smallest model.
+    public static bool Renew(string path) {
+        string cli=CliPath();if(cli==null)return false;
+        long before=0;try{before=Read(path).ExpiresAtMs;}catch{}
+        foreach(string args in new[]{"auth status","-p ok --model haiku --no-session-persistence"}) {
+            try {
+                var info=new System.Diagnostics.ProcessStartInfo(cli,args){CreateNoWindow=true,UseShellExecute=false,RedirectStandardOutput=true,RedirectStandardError=true,RedirectStandardInput=true,WorkingDirectory=Path.GetTempPath()};
+                using(var p=System.Diagnostics.Process.Start(info)) {
+                    p.StandardInput.Close();p.BeginOutputReadLine();p.BeginErrorReadLine();
+                    if(!p.WaitForExit(90000)){try{p.Kill();}catch{}}
+                }
+                var now=Read(path);if(now.ExpiresAtMs>before||!now.Expired&&!NearExpiry(now))return true;
+            } catch {}
+        }
+        return false;
+    }
     // One GET to Anthropic with the token Claude Code already stored. Nothing else leaves the machine.
     public static string Usage(string token,string version) {
         ServicePointManager.SecurityProtocol|=SecurityProtocolType.Tls12;

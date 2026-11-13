@@ -20,8 +20,8 @@
 
 | Файл | Что это |
 |---|---|
-| `ClaudeMeter-1.0-Lite-Setup.exe` | Установщик |
-| `ClaudeMeter-1.0-Lite-Portable.zip` | Портативная версия: распаковать и запустить `ClaudeMeter.exe` |
+| `ClaudeMeter-1.0.1-Lite-Setup.exe` | Установщик |
+| `ClaudeMeter-1.0.1-Lite-Portable.zip` | Портативная версия: распаковать и запустить `ClaudeMeter.exe` |
 | `SHA256SUMS.txt` | Контрольные суммы |
 
 Требуется Windows 10/11 и [Claude Code](https://code.claude.com/docs/en/setup) с входом через аккаунт Claude (Pro, Max или Team). Вход через Console/API не имеет лимитов тарифа.

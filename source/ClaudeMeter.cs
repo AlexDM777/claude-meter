@@ -388,7 +388,7 @@ public partial class Widget : Window {
         var reloadSkins=new MenuItem{Header="Обновить список"};reloadSkins.Click+=delegate{try{ReloadCustomSkins();}catch(Exception e){MessageBox.Show(this,e.Message,Lang.T("Пользовательские скины"));}};custom.Items.Add(reloadSkins);
         if(customSkinErrors.Count>0)custom.Items.Add(new MenuItem{Header=Lang.T("Не загружено")+": "+customSkinErrors.Count,IsEnabled=false,ToolTip=string.Join("\n",customSkinErrors)});
         preferences.Items.Add(custom);
-        var planItem=new MenuItem{Header="Тариф",IsEnabled=false};preferences.Items.Add(planItem);preferences.Items.Add(new MenuItem{Header="ClaudeMeter 1.0.0 Lite",IsEnabled=false});
+        var planItem=new MenuItem{Header="Тариф",IsEnabled=false};preferences.Items.Add(planItem);preferences.Items.Add(new MenuItem{Header="ClaudeMeter 1.0.1 Lite",IsEnabled=false});
         var languages=new MenuItem{Header="Язык"};foreach(var language in Lang.Names){string code=language.Key;var item=new MenuItem{Header=SkinOptions.Language(code,language.Value),Tag=code,ToolTip=language.Value,IsCheckable=true,IsChecked=Lang.Code==code};item.Click+=delegate{Lang.Code=code;SaveSettings();BuildMenu();UpdateStatus();face.ToolTip=Lang.T("Перетащите мышью • ПКМ: настройки • Колесо: размер");face.InvalidateVisual();UpdateTrayText();};languages.Items.Add(item);}preferences.Items.Add(languages);
         var autorun=new MenuItem{Header="Запускать с Windows",IsCheckable=true};autorun.Click+=delegate{try{startup.Set(autorun.IsChecked);startupDesired=autorun.IsChecked;hasStartupPreference=true;SaveSettings();}catch(Exception e){autorun.IsChecked=startup.Enabled;MessageBox.Show(this,e.Message,Lang.T("Автозапуск"));}};preferences.Items.Add(autorun);
         var trayOption=new MenuItem{Header="Значок в трее",IsCheckable=true};trayOption.Click+=delegate{trayEnabled=trayOption.IsChecked;EnsureRecovery();SetupTray();if(!trayEnabled)ShowDisplay();SaveSettings();};preferences.Items.Add(trayOption);
@@ -404,7 +404,7 @@ public partial class Widget : Window {
         var accountItem=new MenuItem{Header="Аккаунт: не выполнен вход",IsEnabled=false};preferences.Items.Add(accountItem);
         var login=new MenuItem{Header="Открыть Claude Code…"};login.Click+=delegate{OpenClaudeCode();};preferences.Items.Add(login);
 
-        var help=new MenuItem{Header="Как пользоваться"};help.Click+=delegate{MessageBox.Show(this,Lang.T("Тариф и версия доступны в настройках. Перетащите виджет мышью. Колесо меняет размер. Двойной клик раскрывает виджет; повторный возвращает прежний размер. Через меню можно выбрать лимит, сделать снимок и настроить автозапуск."),"ClaudeMeter 1.0.0 Lite");};preferences.Items.Add(help);
+        var help=new MenuItem{Header="Как пользоваться"};help.Click+=delegate{MessageBox.Show(this,Lang.T("Тариф и версия доступны в настройках. Перетащите виджет мышью. Колесо меняет размер. Двойной клик раскрывает виджет; повторный возвращает прежний размер. Через меню можно выбрать лимит, сделать снимок и настроить автозапуск."),"ClaudeMeter 1.0.1 Lite");};preferences.Items.Add(help);
         var quit=new MenuItem{Header=Lang.T("Выход из приложения")};quit.Click+=delegate{Quit();};menu.Items.Add(new Separator());menu.Items.Add(quit);face.ContextMenu=menu;Lang.Menu(menu);
         menu.Opened+=delegate{UpdateUpdateControls();fixedSkin.IsChecked=!randomSkinOnStartup;randomSkin.IsChecked=randomSkinOnStartup;planItem.Header=Lang.T("Тариф")+": "+face.Limits.PlanLabel;
             quotaChoice.Items.Clear();
@@ -435,10 +435,12 @@ foreach(MenuItem i in themes.Items)i.IsChecked=(string)i.Tag==face.Skin.Id;forea
     void SaveSettings(){try{Directory.CreateDirectory(data);var settings=new Dictionary<string,object>{{"autoUpdate",autoUpdate},{"randomSkinOnStartup",randomSkinOnStartup},{"language",Lang.Code},{"selectedMinutes",face.SelectedMinutes},{"skin",(skinPreviewOriginal??face.Skin).Id},{"width",Width},{"left",Left},{"top",Top},{"topmost",Topmost},{"opacity",Opacity},{"trayEnabled",trayEnabled},{"showInTaskbar",ShowInTaskbar},{"startHidden",startHidden}};if(hasStartupPreference)settings["startupEnabled"]=startupDesired;File.WriteAllText(Path.Combine(data,"settings.json"),Json.Write(settings),Encoding.UTF8);}catch{}}
     const string Hint="Перетащите мышью • ПКМ: настройки • Колесо: размер";
     // Reads the Claude Code sign-in (never writes it) and asks Anthropic for the current limits.
+    DateTime lastRenew=DateTime.MinValue;
     async Task Refresh() {
         if(busy||closed||demo)return;busy=true;
         try {
-            var login=ClaudeAccount.Read(ClaudeAccount.Require(data));
+            string credsPath=ClaudeAccount.Require(data);var login=ClaudeAccount.Read(credsPath);
+            if(ClaudeAccount.NearExpiry(login)&&DateTime.Now-lastRenew>TimeSpan.FromMinutes(15)){lastRenew=DateTime.Now;connectionStatus="Обновляю вход через Claude Code…";UpdateStatus();await Task.Run(()=>ClaudeAccount.Renew(credsPath));login=ClaudeAccount.Read(credsPath);}
             if(login.Expired)throw new ClaudeAuthException(ClaudeAccount.Expired);
             string body=await Task.Run(()=>ClaudeAccount.Usage(login.AccessToken,AppUpdate.CurrentVersion));
             if(closed)return;
